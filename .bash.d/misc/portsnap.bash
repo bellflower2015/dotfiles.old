@@ -39,7 +39,6 @@ export LDCONFIG="/sbin/ldconfig -i -f ${LOCALBASE}/var/run/ld-elf.so.hints"
 export LD_LIBRARY_PATH=${LOCALBASE}/lib:${LOCALBASE}/lib/nss
 export LD_RUN_PATH=${LOCALBASE}/lib:${LOCALBASE}/lib/nss
 
-PATH=${PATH#${LOCALBASE}/bin:${LOCALBASE}/sbin:}
 export PATH=${LOCALBASE}/bin:${LOCALBASE}/sbin:${PATH}
 export MANPATH_MAP=${LOCALBASE}/bin:${LOCALBASE}/man
 
