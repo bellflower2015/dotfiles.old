@@ -52,8 +52,8 @@ echo_log
     git checkout -b $branch origin/$branch 2>&1 | tee -a $__dotfiles_log
 
 [ "$__dotfiles_new" = "new" ] && git checkout $branch 2>&1 | tee -a $__dotfiles_log
-git fetch --prune --tags 2>&1 | tee -a $__dotfiles_log
-git pull --tags origin $branch 2>&1 | tee -a $__dotfiles_log
+git fetch --prune 2>&1 | tee -a $__dotfiles_log
+git pull origin $branch 2>&1 | tee -a $__dotfiles_log
 
 echo_log
 echo_log
