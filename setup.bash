@@ -22,17 +22,17 @@ function echo_e_log() {
 }
 
 function current_branch(){
-    local result=$(git branch --list|grep '*'|tr "*" " "|xargs)
+    local result=$(git branch|grep '*'|tr "*" " "|xargs)
     echo $result
 }
 
 function branch_exists(){
-    local result=$(git branch --list $1|tr "*" " "|xargs)
+    local result=$(git branch|tr '*' ' '|grep -w $1|xargs)
     [ "$result" = "$1" ] && echo 0||echo 1
 }
 
 function r_branch_exists(){
-    local result=$(git branch -r|grep -v '\->'|sed -e 's!origin/\(.*\)$!\1!'|grep -w $1|xargs)
+    local result=$(git branch -r|grep -v 'HEAD'|sed -e 's!origin/!!'|grep -w $1|xargs)
     [ "$result" = "$1" ] && echo 0||echo 1
 }
 
@@ -53,7 +53,7 @@ echo_log
 
 [ "$__dotfiles_new" = "new" ] && git checkout $branch 2>&1 | tee -a $__dotfiles_log
 git fetch --prune --tags 2>&1 | tee -a $__dotfiles_log
-git pull --prune --tags origin $branch 2>&1 | tee -a $__dotfiles_log
+git pull --tags origin $branch 2>&1 | tee -a $__dotfiles_log
 
 echo_log
 echo_log
