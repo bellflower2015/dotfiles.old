@@ -1,24 +1,24 @@
 branch=$1
 dotpath=~/.dotfiles
-export __dotfiles_log=$HOME/.dotfiles.initlog
+logfile=$HOME/.dotfiles.initlog
 
 githuburl=https://bellflower2015@github.com/bellflower2015/dotfiles.git
 
 function init_log() {
-    unlink $__dotfiles_log 2>/dev/null
-    echo "" | tee $__dotfiles_log
+    unlink $logfile 2>/dev/null
+    echo "" | tee $logfile
 }
 
 function echo_log() {
-    echo "$1" | tee -a $__dotfiles_log
+    echo "$1" | tee -a $logfile
 }
 
 function echo_n_log() {
-    echo -n "$1" | tee -a $__dotfiles_log
+    echo -n "$1" | tee -a $logfile
 }
 
 function echo_e_log() {
-    echo -e "$1" | tee -a $__dotfiles_log
+    echo -e "$1" | tee -a $logfile
 }
 
 function current_branch(){
@@ -49,11 +49,11 @@ echo_e_log "\e[31m*\e[m Target branch: \e[32m$branch\e[m"
 echo_log
 
 [ $(r_branch_exists $branch) -eq 0 ] && [ $(branch_exists $branch) -ne 0 ] && \
-    git checkout -b $branch origin/$branch 2>&1 | tee -a $__dotfiles_log
+    git checkout -b $branch origin/$branch 2>&1 | tee -a $logfile
 
-[ "$__dotfiles_new" = "new" ] && git checkout $branch 2>&1 | tee -a $__dotfiles_log
-git fetch --prune 2>&1 | tee -a $__dotfiles_log
-git pull origin $branch 2>&1 | tee -a $__dotfiles_log
+[ "$__dotfiles_new" = "new" ] && git checkout $branch 2>&1 | tee -a $logfile
+git fetch --prune 2>&1 | tee -a $logfile
+git pull origin $branch 2>&1 | tee -a $logfile
 
 echo_log
 echo_log
@@ -61,7 +61,7 @@ echo_e_log "\e[31m*\e[m Set \e[32msymlinks\e[m:"
 echo_log
 for f in $dotpath/.??*; do
     [ "$f" = "$dotpath/.git" ] && continue
-    ln -snfv $f ~/${f#$dotpath/} 2>&1 | tee -a $__dotfiles_log
+    ln -snfv $f ~/${f#$dotpath/} 2>&1 | tee -a $logfile
 done
 echo_log
 

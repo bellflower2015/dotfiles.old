@@ -1,6 +1,6 @@
-export __dotfiles_dir=$HOME/.dotfiles
-export __dotfiles_initlog=$HOME/.dotfiles.initlog
-export __dotfiles_log=$HOME/.dotfiles.log
+export DOTFILESDIR=$HOME/.dotfiles
+export DOTFILES_INITLOG=$HOME/.dotfiles.initlog
+export DOTFILES_LOG=$HOME/.dotfiles.log
 
 basedir=$HOME/.bash.d
 color_on="\e[32m"
@@ -8,20 +8,20 @@ color_off="\e[m"
 indentnum=0
 
 function init_log() {
-    unlink $__dotfiles_log 2>/dev/null
-    echo "" | tee $__dotfiles_log
+    unlink $DOTFILES_LOG 2>/dev/null
+    echo "" | tee $DOTFILES_LOG
 }
 
 function echo_log() {
-    echo "$1" | tee -a $__dotfiles_log
+    echo "$1" | tee -a $DOTFILES_LOG
 }
 
 function echo_n_log() {
-    echo -n "$1" | tee -a $__dotfiles_log
+    echo -n "$1" | tee -a $DOTFILES_LOG
 }
 
 function echo_e_log() {
-    echo -e "$1" | tee -a $__dotfiles_log
+    echo -e "$1" | tee -a $DOTFILES_LOG
 }
 
 function uniq_env() {
@@ -123,13 +123,13 @@ function dotfiles() {
                 EXIT=1
                 ;;
             '-r'|'--reload' )
-                eval "$(cat $__dotfiles_dir/setup.bash)"
+                eval "$(cat $DOTFILESDIR/setup.bash)"
                 EXIT=1
                 ;;
             '-l'|'--log' )
                 shift 1
-                [ -r $__dotfiles_initlog ] && cat $__dotfiles_initlog
-                [ -r $__dotfiles_log ] && cat $__dotfiles_log
+                [ -r $DOTFILES_INITLOG ] && cat $DOTFILES_INITLOG
+                [ -r $DOTFILES_LOG ] && cat $DOTFILES_LOG
                 EXIT=1
                 ;;
             '--'|'-' )
