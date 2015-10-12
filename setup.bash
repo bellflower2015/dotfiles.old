@@ -1,3 +1,8 @@
+if [ ! "$(type git 2>/dev/null)" ]; then
+    echo "$0: git not found"
+    exit 1
+fi
+
 branch=$1
 dotpath=~/.dotfiles
 logfile=$HOME/.dotfiles.initlog
