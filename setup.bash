@@ -61,8 +61,11 @@ echo_e_log "\e[31m*\e[m Set \e[32msymlinks\e[m:"
 echo_log
 for f in $dotpath/.??*; do
     [ "$f" = "$dotpath/.git" ] && continue
+    [ "$f" = "$dotpath/.gitignore" ] && continue
     ln -snfv $f ~/${f#$dotpath/} 2>&1 | tee -a $logfile
 done
 echo_log
+
+eval "$(curl -fsSL raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh)"
 
 popd >/dev/null 2>&1 && exec $SHELL -l
