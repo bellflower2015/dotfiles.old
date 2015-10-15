@@ -66,6 +66,8 @@ for f in $dotpath/.??*; do
 done
 echo_log
 
-eval "$(curl -fsSL raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh)"
+if [ ! -e $HOME/.vim/bundle/neobundle.vim ]; then
+    eval "$(curl -fsSL raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh)"
+fi
 
 popd >/dev/null 2>&1 && exec $SHELL -l
