@@ -1,0 +1,32 @@
+autocmd ColorScheme * highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE
+autocmd ColorScheme * highlight CursorLineNr cterm=underline ctermfg=208 ctermbg=NONE
+autocmd ColorScheme * highlight Delimiter ctermfg=NONE
+autocmd ColorScheme * highlight LineNr cterm=NONE ctermfg=NONE ctermbg=NONE
+autocmd ColorScheme * highlight MatchParen term=reverse cterm=bold ctermfg=81 ctermbg=233
+autocmd ColorScheme * highlight NonText cterm=NONE ctermfg=236
+autocmd ColorScheme * highlight Normal cterm=NONE ctermfg=NONE ctermbg=NONE
+autocmd ColorScheme * highlight Pmenu ctermbg=24 ctermfg=NONE
+autocmd ColorScheme * highlight PMenuSbar ctermbg=24 ctermfg=NONE
+autocmd ColorScheme * highlight PmenuSel ctermbg=white ctermfg=24
+autocmd ColorScheme * highlight SignColumn ctermbg=NONE
+autocmd ColorScheme * highlight SpecialKey cterm=NONE ctermfg=236
+
+" 行末のスペースをハイライト
+augroup HighlightTrailingSpaces
+  autocmd!
+  autocmd VimEnter,WinEnter,ColorScheme * highlight TrailingSpaces term=underline guibg=Red ctermbg=Red
+  autocmd VimEnter,WinEnter * match TrailingSpaces /\s\+$/
+augroup END
+
+function! ZenkakuSpace()
+  highlight ZenkakuSpace cterm=reverse ctermfg=236
+endfunction
+
+if has('syntax')
+  augroup ZenkakuSpace
+    autocmd!
+    autocmd ColorScheme       * call ZenkakuSpace()
+    autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+  augroup END
+  call ZenkakuSpace()
+endif

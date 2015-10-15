@@ -1,0 +1,33 @@
+if exists('&ambiwidth')
+  set ambiwidth=double
+endif
+set background=dark
+set backspace=indent,eol,start
+set cindent
+set colorcolumn=80,120,160
+set cursorline
+set encoding=utf-8
+set expandtab
+set fileencodings=utf-8
+set fileformats=unix,dos,mac
+set foldcolumn=2
+"set foldmethod=marker
+set helplang=ja
+set hlsearch
+set incsearch
+set laststatus=2
+set list
+set listchars=eol:↲,tab:»-,trail:-,extends:»,precedes:«,nbsp:%
+set matchpairs+=<:>
+set number
+set scrolloff=999
+set shiftwidth=4
+set showcmd
+set showmatch
+set showtabline=2
+set smarttab
+set t_Co=256
+set tabstop=4
+set whichwrap=b,s,h,s,<,>,[,]
+set wildmenu
+set wildmode=list:full

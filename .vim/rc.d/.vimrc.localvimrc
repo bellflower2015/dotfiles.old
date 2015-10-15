@@ -1,0 +1,2 @@
+" vim-localvimrc 設定を確認なしで読み込む
+let g:localvimrc_ask = 0
