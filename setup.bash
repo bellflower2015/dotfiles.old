@@ -2,7 +2,7 @@ branch=$1
 dotpath=~/.dotfiles
 logfile=$HOME/.dotfiles.initlog
 
-githuburl=https://bellflower2015@github.com/bellflower2015/dotfiles.git
+githuburl=https://github.com/bellflower2015/dotfiles.git
 
 function init_log() {
     unlink $logfile 2>/dev/null
