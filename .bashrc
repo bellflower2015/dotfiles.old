@@ -78,7 +78,7 @@ function read_file() {
 
 function read_dir() {
     local f
-    find "$1" -name "$2" -type f | while read f
+    for f in $(find "$1" -name "$2" -type f | sort)
     do
         read_file "$f"
     done
@@ -98,7 +98,7 @@ function get_ostype() {
 
 function dotfiles() {
     PROGNAME=dotfiles
-    VERSION="0.1.0"
+    VERSION="0.1.1"
     EXIT=0
     
     function usage() {
