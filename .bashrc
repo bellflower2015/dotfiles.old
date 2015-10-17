@@ -2,7 +2,7 @@ export DOTFILESDIR=$HOME/.dotfiles
 export DOTFILES_INITLOG=$HOME/.dotfiles.initlog
 export DOTFILES_LOG=$HOME/.dotfiles.log
 
-basedir=$HOME/.bash.d
+basedir="$HOME/.bash.d"
 color_on="\e[32m"
 color_off="\e[m"
 indentnum=0
@@ -13,40 +13,40 @@ function init_log() {
 }
 
 function echo_log() {
-    echo "$1" | tee -a $DOTFILES_LOG
+    echo "$*" | tee -a $DOTFILES_LOG
 }
 
 function echo_n_log() {
-    echo -n "$1" | tee -a $DOTFILES_LOG
+    echo -n "$*" | tee -a $DOTFILES_LOG
 }
 
 function echo_e_log() {
-    echo -e "$1" | tee -a $DOTFILES_LOG
+    echo -e "$*" | tee -a $DOTFILES_LOG
 }
 
 function uniq_env() {
     local name=${1:-PATH}
-    local val=$(eval echo '$'$name)
-    export $name=$(echo $val | tr ':' '\n' | sed '/^$/d' | awk '!a[$0]++' | paste -d: -s -)
+    local val; eval val=\"\$$name\"
+    export $name="$(echo $val | tr ':' '\n' | sed '/^$/d' | awk '!a[$0]++' | paste -d: -s -)"
 }
 
 function append_env() {
     local name=${1:-PATH}
-    local val=$(eval echo '$'$name)
-    eval $name=$val:$2
+    local val; eval val=\"\$$name\"
+    printf -v "$name" "%s" "$val:$2"
     uniq_env $name
 }
 
 function prepend_env() {
     local name=${1:-PATH}
-    local val=$(eval echo '$'$name)
-    eval $name=$2:$val
+    local val; eval val=\"\$$name\"
+    printf -v "$name" "%s" "$2:$val"
     uniq_env $name
 }
 
-function uniq_path()    { uniq_env    PATH   ; }
-function append_path()  { append_env  PATH $1; }
-function prepend_path() { prepend_env PATH $1; }
+function uniq_path()    { uniq_env    PATH     ; }
+function append_path()  { append_env  PATH "$*"; }
+function prepend_path() { prepend_env PATH "$*"; }
 
 function base_name() {
     echo ${1##*/}
@@ -60,10 +60,10 @@ function read_file() {
     local file=$1
 
     #local path="~/${file#$HOME/}"
-    local path=$file
-    local dir=$(dir_name $path)
-    local base=$(base_name $path)
-    if [ -r $file ]; then
+    local path="$file"
+    local dir=$(dir_name "$path")
+    local base=$(base_name "$path")
+    if [ -r "$file" ]; then
         indent=""
         if [ $indentnum -gt 0 ]; then
             for ((i=0;i<$indentnum;i++)); do indent="  "$indent; done
@@ -71,14 +71,17 @@ function read_file() {
         echo_n_log "  ${indent}- $dir/"
         echo_e_log "${color_on}${base}${color_off}"
         indentnum=$((indentnum+1))
-        . $file
+        . "$file"
         indentnum=$((indentnum-1))
     fi
 }
 
 function read_dir() {
     local f
-    for f in $@; do read_file $f; done
+    find "$1" -name "$2" -type f | while read f
+    do
+        read_file "$f"
+    done
 }
 
 function get_ostype() {
@@ -95,7 +98,7 @@ function get_ostype() {
 
 function dotfiles() {
     PROGNAME=dotfiles
-    VERSION="0.0.1"
+    VERSION="0.1.0"
     EXIT=0
     
     function usage() {
@@ -157,21 +160,29 @@ init_log
 echo_e_log "\e[31m*\e[m Loaded the init ${color_on}scripts${color_off} in the following order:"
 echo_log
 
-append_path '$HOME/.dotfiles/bin'
+append_path "$HOME/.dotfiles/bin"
 
 echo_e_log "- $HOME/${color_on}.bashrc${color_off}"
-[ -d $basedir ] && read_dir $basedir/rc.d/*.bash
-read_file $HOME/.bashrc.local
+[ -d "$basedir" ] && read_dir "$basedir/rc.d" "*.bash"
+read_file "$HOME/.bashrc.local"
 echo_log
 
 uniq_path
 echo_log
 echo_e_log "\e[31m*\e[m ${color_on}PATH${color_off} Environment:"
 echo_log
-path=($(echo $PATH | tr ':' '\n'))
-for p in "${path[@]}"; do
-    echo_log "  - $p"
-done
+function path_list() {
+    local IFS="$IFS"
+    local source="$*"
+    local -a ary
+
+    IFS=':'
+    ary=(${source})
+    for p in "${ary[@]}"; do
+        echo_log "  - $p"
+    done
+}
+path_list $PATH
 echo_log
 
 #--------------------------------------
