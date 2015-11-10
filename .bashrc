@@ -59,20 +59,23 @@ function dir_name() {
 function read_file() {
     local file=$1
 
-    #local path="~/${file#$HOME/}"
     local path="$file"
     local dir=$(dir_name "$path")
     local base=$(base_name "$path")
     if [ -r "$file" ]; then
-        indent=""
-        if [ $indentnum -gt 0 ]; then
-            for ((i=0;i<$indentnum;i++)); do indent="  "$indent; done
+        if tty -s; then
+            indent=""
+            if [ $indentnum -gt 0 ]; then
+                for ((i=0;i<$indentnum;i++)); do indent="  "$indent; done
+            fi
+            echo_n_log "  ${indent}- $dir/"
+            echo_e_log "${color_on}${base}${color_off}"
+            indentnum=$((indentnum+1))
         fi
-        echo_n_log "  ${indent}- $dir/"
-        echo_e_log "${color_on}${base}${color_off}"
-        indentnum=$((indentnum+1))
         . "$file"
-        indentnum=$((indentnum-1))
+        if tty -s; then
+            indentnum=$((indentnum-1))
+        fi
     fi
 }
 
@@ -145,7 +148,6 @@ function dotfiles() {
                 ;;
             *)
                 if [[ ! -z "$1" ]] && [[ ! "$1" =~ ^-+ ]]; then
-                    #param=( ${param[@]} "$1" )
                     param+=( "$1" )
                     shift 1
                 fi
@@ -156,21 +158,30 @@ function dotfiles() {
     [ -z $param ] && [ $EXIT -ne 1 ] && usage
 }
 
-init_log
-echo_e_log "\e[31m*\e[m Loaded the init ${color_on}scripts${color_off} in the following order:"
-echo_log
+if tty -s; then
+    init_log
+    echo_e_log "\e[31m*\e[m Loaded the init ${color_on}scripts${color_off} in the following order:"
+    echo_log
+fi
 
 append_path "$HOME/.dotfiles/bin"
 
-echo_e_log "- $HOME/${color_on}.bashrc${color_off}"
+if tty -s; then
+    echo_e_log "- $HOME/${color_on}.bashrc${color_off}"
+fi
 [ -d "$basedir" ] && read_dir "$basedir/rc.d" "*.bash"
 read_file "$HOME/.bashrc.local"
-echo_log
+
+if tty -s; then
+    echo_log
+fi
 
 uniq_path
-echo_log
-echo_e_log "\e[31m*\e[m ${color_on}PATH${color_off} Environment:"
-echo_log
+if tty -s; then
+    echo_log
+    echo_e_log "\e[31m*\e[m ${color_on}PATH${color_off} Environment:"
+    echo_log
+fi
 function path_list() {
     local IFS="$IFS"
     local source="$*"
@@ -182,8 +193,10 @@ function path_list() {
         echo_log "  - $p"
     done
 }
-path_list $PATH
-echo_log
+if tty -s; then
+    path_list $PATH
+    echo_log
+fi
 
 #--------------------------------------
 
